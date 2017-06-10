@@ -9,6 +9,7 @@ var server = http.createServer(function (req, res) {
     res.end('no such location')
   })
 });
+
 server.listen(config.port);
 
 handler.on('error', function (err) {
@@ -32,5 +33,9 @@ handler.on('issues', function (event) {
 handler.on('pull_request', function (event) {
   console.log('Received a pull request #%d ',
     event.payload.pull_request.number);
+  if (event.payload.action === "labeled" && event.payload.label.name === "test") {
+    console.log("Label added");
+  } else if (event.payload.action === "unlabeled" && event.payload.label.name === "test") {
+    console.log("Label removed");
+  } 
 });
-
