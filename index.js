@@ -2,6 +2,7 @@ var http = require('http');
 var createHandler = require('github-webhook-handler');
 var config = require('./config');
 var handler = createHandler({ path: config.path, secret: config.secret });
+const exec = require('child_process').exec;
 
 var server = http.createServer(function (req, res) {
   handler(req, res, function (err) {
@@ -34,8 +35,26 @@ handler.on('pull_request', function (event) {
   console.log('Received a pull request #%d ',
     event.payload.pull_request.number);
   if (event.payload.action === "labeled" && event.payload.label.name === "test") {
-    console.log("Label added");
+    var pr = event.payload.pull_request.number;
+    var repo = config.repository;
+    var start_command = './deploy.sh '+ repo + ' ' + pr;
+    var startChild = exec(start_command, // command line argument directly in string
+      function (error, stdout, stderr) {      // one easy function to capture data/errors
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+    });
   } else if (event.payload.action === "unlabeled" && event.payload.label.name === "test") {
-    console.log("Label removed");
+    var stop_command = './stop.sh';
+    var stopChild = exec(stop_command, // command line argument directly in string
+      function (error, stdout, stderr) {      // one easy function to capture data/errors
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+    });
   } 
 });
