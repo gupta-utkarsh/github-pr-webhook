@@ -1,10 +1,12 @@
 var http = require('http');
 var createHandler = require('github-webhook-handler');
-var config = require('./config');
-var handler = createHandler({ path: config.path, secret: config.secret });
-const exec = require('child_process').exec;
 
+var config = require('./config');
+var serverApi = require('./server');
+
+var handler = createHandler({ path: config.path, secret: config.secret });
 var server = http.createServer(function (req, res) {
+  console.log(req);
   handler(req, res, function (err) {
     res.statusCode = 404
     res.end('no such location')
@@ -32,29 +34,16 @@ handler.on('issues', function (event) {
 });
 
 handler.on('pull_request', function (event) {
-  console.log('Received a pull request #%d ',
-    event.payload.pull_request.number);
+
+  var prNo = parseInt(event.payload.pull_request.number);
+
+  console.log('Received a pull request #%d ', prNo);
+
   if (event.payload.action === "labeled" && event.payload.label.name === "test") {
-    var pr = event.payload.pull_request.number;
-    var repo = config.repository;
-    var start_command = './deploy.sh '+ repo + ' ' + pr;
-    var startChild = exec(start_command, // command line argument directly in string
-      function (error, stdout, stderr) {      // one easy function to capture data/errors
-        console.log('stdout: ' + stdout);
-        console.log('stderr: ' + stderr);
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-    });
+    if(serverApi.startServer(prNo))
+      console.log('Successfully deployed pull request #%d ', prNo);
   } else if (event.payload.action === "unlabeled" && event.payload.label.name === "test") {
-    var stop_command = './stop.sh';
-    var stopChild = exec(stop_command, // command line argument directly in string
-      function (error, stdout, stderr) {      // one easy function to capture data/errors
-        console.log('stdout: ' + stdout);
-        console.log('stderr: ' + stderr);
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-    });
-  } 
+    if(serverApi.stopServer(prNo))
+      console.log('Successfully stopped pull_request #%d ', prNo);
+  }
 });

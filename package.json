@@ -9,6 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "github-webhook-handler": "^0.6.0"
+    "github-webhook-handler": "^0.6.0",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "prettier": "^1.4.4"
   }
 }
