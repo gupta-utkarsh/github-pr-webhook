@@ -13,9 +13,11 @@ app.get('/', function (req, res) {
 
 app.post(config.path, function (req,res) {
   handler(req, res, function (err) {
-    res.statusCode = 404
-    res.end('no such location')
+    res.statusCode = 404;
+    res.end('no such location');
   });
+  res.statusCode = 200;
+  res.end('OK');
 });
 
 handler.on('error', function (err) {
