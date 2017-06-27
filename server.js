@@ -38,6 +38,24 @@ function serverApi() {
 		servers[idString].prNo = 0;
 	}
 
+  var setServerToDeploying = function setServerToDeploying(id) {
+    var idString = '' + id;
+    var status = 'DEPLOYING';
+    servers[idString].status = status;
+  }
+
+  var setServerToDeployed = function setServerToDeployed(id) {
+    var idString = '' + id;
+    var status = 'DEPLOYED';
+    servers[idString].status = status;
+  }
+
+  var setServerToInactive = function setServerToInactive(id) {
+    var idString = '' + id;
+    var status = 'INACTIVE';
+    servers[idString].status = status;
+  }
+
 	var startServer = function startServer(prNo) {
 		var freeServer = getFreeServer(prNo);
 		if (freeServer) {
@@ -54,8 +72,10 @@ function serverApi() {
         freeServer.port2;
 
 			console.log(start_command);
+      setServerToDeploying(freeServer.id);
       var startChild = execSync(start_command, errorHandler);
 		  setServerPr(freeServer.id, prNo);
+      setServerToDeployed(freeServer.id);
       return true;
     } else {
       return false;
@@ -80,6 +100,7 @@ function serverApi() {
       console.log(stop_command);
       var stopChild = execSync(stop_command, errorHandler);
       removeServerPr(server.id);
+      setServerToInactive(server.id);
       return true;
     } else {
       return false;

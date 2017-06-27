@@ -6,7 +6,9 @@ var serverApi = require('./server');
 
 var handler = createHandler({ path: config.path, secret: config.secret });
 var server = http.createServer(function (req, res) {
-  console.log(req);
+  if(req.url === '/' && req.method === 'GET') {
+    res.end(JSON.stringify(serverApi.serverStatus()));
+  }
   handler(req, res, function (err) {
     res.statusCode = 404
     res.end('no such location')

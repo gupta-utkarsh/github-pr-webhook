@@ -11,13 +11,15 @@ config.servers = {
     id: 1,
     prNo: 0,
     port1: 6000,
-    port2: 8000
+    port2: 8000,
+    status: 'INACTIVE'
   },
   '2' : {
     id: 2,
     prNo: 0,
     port1: 6001,
-    port2: 8001
+    port2: 8001,
+    status: 'INACTIVE'
   }
 }
 
