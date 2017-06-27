@@ -1,21 +1,22 @@
-var http = require('http');
+const express = require('express')
 var createHandler = require('github-webhook-handler');
 
 var config = require('./config');
 var serverApi = require('./server');
 
 var handler = createHandler({ path: config.path, secret: config.secret });
-var server = http.createServer(function (req, res) {
-  if(req.url === '/' && req.method === 'GET') {
-    res.end(JSON.stringify(serverApi.serverStatus()));
-  }
+const app = express();
+
+app.get('/', function (req, res) {
+  res.json(serverApi.serverStatus());
+});
+
+app.post(config.path, function (req,res) {
   handler(req, res, function (err) {
     res.statusCode = 404
     res.end('no such location')
-  })
+  });
 });
-
-server.listen(config.port);
 
 handler.on('error', function (err) {
   console.error('Error:', err.message);
@@ -49,3 +50,7 @@ handler.on('pull_request', function (event) {
       console.log('Successfully stopped pull_request #%d ', prNo);
   }
 });
+
+app.listen(config.port, function () {
+  console.log('application listening on port %d', config.port);
+})

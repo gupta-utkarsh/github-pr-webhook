@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.15.3",
     "github-webhook-handler": "^0.6.0"
   },
   "devDependencies": {
