@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    title Jade Example
+    link(rel="stylesheet", href="style.css")
+  body
+    table
+      tr
+        th id
+        th prNo
+        th port1
+        th port2
+        th status
+      each val, index in servers
+        tr
+          td #{val.id}
+          td #{val.prNo}
+          td #{val.port1}
+          td #{val.port2}
+          td #{val.status}
+

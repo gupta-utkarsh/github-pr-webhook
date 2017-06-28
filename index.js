@@ -5,10 +5,13 @@ var config = require('./config');
 var serverApi = require('./server');
 
 var handler = createHandler({ path: config.path, secret: config.secret });
+
 const app = express();
+app.set('view engine', 'jade');
+app.use(express.static('public'));
 
 app.get('/', function (req, res) {
-  res.json(serverApi.serverStatus());
+  res.render('index', { servers: serverApi.serverStatus() });
 });
 
 app.post(config.path, function (req,res) {
@@ -16,8 +19,6 @@ app.post(config.path, function (req,res) {
     res.statusCode = 404;
     res.end('no such location');
   });
-  res.statusCode = 200;
-  res.end('OK');
 });
 
 handler.on('error', function (err) {
