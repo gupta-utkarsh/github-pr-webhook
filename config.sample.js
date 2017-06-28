@@ -12,14 +12,20 @@ config.servers = {
     prNo: 0,
     port1: 6000,
     port2: 8000,
-    status: 'INACTIVE'
+    status: 'INACTIVE',
+    url: [
+      'dev.dev.org'
+    ]
   },
   '2' : {
     id: 2,
     prNo: 0,
     port1: 6001,
     port2: 8001,
-    status: 'INACTIVE'
+    status: 'INACTIVE',
+    url: [
+      'dev.dev.org'
+    ]
   }
 }
 

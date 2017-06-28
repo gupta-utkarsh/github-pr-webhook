@@ -11,6 +11,7 @@ html
         th port1
         th port2
         th status
+        th urls
       each val, index in servers
         tr
           td #{val.id}
@@ -18,4 +19,7 @@ html
           td #{val.port1}
           td #{val.port2}
           td #{val.status}
-
+          td
+            each url in val.url
+              a(href="http://#{url}") #{url}
+              span &emsp;
